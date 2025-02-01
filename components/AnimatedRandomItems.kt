@@ -5,6 +5,7 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,12 +17,16 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.drawscope.DrawScope
 
 @Composable
 fun AnimatedDice(value: Int, isRolling: Boolean) {
@@ -131,41 +136,44 @@ fun AnimatedCoin(isHeads: Boolean, isFlipping: Boolean) {
 
 @Composable
 fun AnimatedCard(card: String, isDrawing: Boolean) {
-    var currentRotation by remember { mutableStateOf(0f) }
-    var previousCard by remember { mutableStateOf("") }
-    val rotation = animateFloatAsState(
-        targetValue = if (isDrawing) currentRotation + 180f else currentRotation,
-        animationSpec = tween(500),
-        label = "card_flip"
-    )
-
-    LaunchedEffect(card, isDrawing) {
-        if (isDrawing) {
-            delay(250)
-            previousCard = card
-        }
-    }
-
     Box(
         modifier = Modifier
-            .size(120.dp, 180.dp)
-            .scale(1f, if (rotation.value % 360 > 90 && rotation.value % 360 < 270) -1f else 1f),
+            .size(120.dp, 180.dp),
         contentAlignment = Alignment.Center
     ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            drawRoundRect(
-                color = if (rotation.value % 360 > 90 && rotation.value % 360 < 270) Color(0xFF1E90FF) else Color.White,
-                size = Size(size.width, size.height),
-                cornerRadius = CornerRadius(15f, 15f)
-            )
-        }
-        if (rotation.value % 360 <= 90 || rotation.value % 360 >= 270) {
-            Text(
-                text = previousCard,
-                fontSize = 40.sp,
-                color = if (previousCard.contains("♥") || previousCard.contains("♦")) 
-                    Color.Red else Color.Black
-            )
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            shape = RoundedCornerShape(15.dp),
+            color = if (!isDrawing) Color.White else Color(0xFF1E90FF)
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                if (!isDrawing) {
+                    // Face avec le résultat
+                    Text(
+                        text = card,
+                        fontSize = 40.sp,
+                        color = if (card.contains("♥") || card.contains("♦")) 
+                            Color.Red else Color.Black
+                    )
+                } else {
+                    // Face bleue avec motif
+                    Canvas(modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
+                    ) {
+                        drawRect(
+                            color = Color.White,
+                            style = Stroke(width = 4f)
+                        )
+                        drawRect(
+                            color = Color.White,
+                            style = Stroke(width = 2f),
+                            size = Size(size.width * 0.8f, size.height * 0.8f),
+                            topLeft = Offset(size.width * 0.1f, size.height * 0.1f)
+                        )
+                    }
+                }
+            }
         }
     }
 } 
