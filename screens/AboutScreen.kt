@@ -79,7 +79,7 @@ fun AboutScreen(onBack: () -> Unit) {
                 }
                 
                 Text(
-                    text = "\nVersion ${BuildConfig.VERSION_NAME}",
+                    text = "Version ${BuildConfig.VERSION_NAME}",
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center
                 )
