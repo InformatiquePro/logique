@@ -1,6 +1,7 @@
 # logique
 Logique : Une application de tirage de dé, pièce et de carte !
 **Ce projet est sous liscence : Creative Commons Attribution 4.0 (CC BY 4.0)**
+ > *Si vous avez tous problème, vous pouvez me contacter à ce mail : contact.charles-elie@orange.fr*
 
 ![Copie d'écran_20250202_181047](https://github.com/user-attachments/assets/4d1511c2-1712-475f-b838-37bc8fbf06dd)
 
